@@ -37,7 +37,39 @@ const PatientSchema = new mongoose.Schema({
     age:{
         type: Number,
         required: true,
-    }
+    },
+    upcomingAppt:[{
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Doctor",
+            unique: true
+        },
+        time: {
+            type: String,
+        },
+        date: {
+            type: String,
+        },
+        name: {
+            type: String,
+        }
+    }],
+    pastAppt:[{
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Doctor",
+            unique: true
+        },
+        time: {
+            type: String,
+        },
+        date: {
+            type: String,
+        },
+        name: {
+            type: String,
+        }
+    }]
 })
 
 PatientSchema.pre("save", async function (next) {

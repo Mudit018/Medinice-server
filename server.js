@@ -29,6 +29,7 @@ const server = app.listen(port , () => {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // socket
+
 const io = new Server(server,{
   cors:{
     origin: ["http://localhost:3000"],
@@ -46,8 +47,18 @@ io.on("connection",(socket)=>{
   })
   
   socket.on("getappointment" , ({id,userData}) => {
-    console.log(userData.name);
-    socket.in(id).emit("appointmentreq" , {userData});
+    // console.log(userData.name);
+    socket.in(id).emit("appointmentreq" , {patient : userData});
+  })
+  
+  socket.on("acceptreq" , ({info , pid , did , name}) => {
+    // console.log(info , `Request Accepted for ${pid} by ${did}`);
+    socket.in(pid).emit("reqaccept" , {info , pid , did , name});
+  })
+  
+  socket.on("deletereq", ({id}) => {
+    // console.log(`Request Declined for ${id}`);
+    socket.in(id).emit("reqdelete" , {});
   })
   
   socket.on("disconnect",() => {

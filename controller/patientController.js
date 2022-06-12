@@ -62,7 +62,7 @@ export const getAllPatient = async (req , res) => {
 export const getPatient = async (req , res) => {
     try {
         const id = req.params.id;
-        const data = await Patient.find({_id: id});
+        const data = await Patient.find({_id: id}).populate("upcomingAppt._id");
         return res.status(200).json(data);
     } catch (error) {
         res.status(500).json({message : "Server error"});
@@ -89,7 +89,7 @@ export const searchDoctor = async(req,res) => {
         const country = req.query.country;
         const speciality = req.query.speciality
         const qualification = req.query.qualification;
-        console.log(name,country,speciality,qualification);
+        // console.log(name,country,speciality,qualification);
         
         if(name) {
             const data = await Doctor.find({name: {$regex : name , $options : "i"}});
@@ -111,4 +111,20 @@ export const searchDoctor = async(req,res) => {
     } catch(error){
         return res.status(500).json({message:"Server error!"});
     }  
+}
+
+export const addPatUpcomingAppt = async(req,res) => {
+    try {
+        console.log(req.body);
+        const pid = req.body.pid;
+        const did = req.body.did;
+        const time = req.body.time;
+        const date = req.body.date;
+
+        const data = await Patient.findByIdAndUpdate({_id : pid} , {$addToSet: {upcomingAppt: {_id: did , time: time , date: date}}} , {new: true}).populate("upcomingAppt._id");
+        res.status(200).json({message:"added successfully",data});
+        
+    } catch (error) {
+        return res.status(500).json({message:"Server error!"});
+    }
 }

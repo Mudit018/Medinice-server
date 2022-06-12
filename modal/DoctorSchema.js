@@ -64,12 +64,43 @@ const DoctorSchema = new mongoose.Schema({
     description:{
         type:String,
         required:false,
-    }
+    },
+    pendingRequests:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Patient",
+        unique: true
+    }],
+    upcomingAppt:[{
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Patient",
+            unique: true
+        },
+        time: {
+            type: String,
+        },
+        date: {
+            type: String,
+        },
+    }],
+    pastAppt:[{
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Patient",
+            unique: true
+        },
+        time: {
+            type: String,
+        },
+        date: {
+            type: String,
+        },
+    }]
 })
 
 DoctorSchema.pre("save",async function (next){
 
-    if(this.isModified("password")){
+    if(this.isModified("password")) {
         this.password = await bcrypt.hash(this.password,10);
     }
     next();
