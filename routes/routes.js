@@ -21,6 +21,7 @@ import {
   updatePatient,
   getPatient,
   addPatUpcomingAppt,
+  addPatPastAppt,
 } from "../controller/patientController.js";
 
 const router = express.Router();
@@ -51,6 +52,7 @@ router.get("/getpatient/:id", getPatient);
 router.get("/searchdoctor", searchDoctor);
 router.post("/updatepatient", updatePatient);
 router.post("/addpatupcomingappt", addPatUpcomingAppt);
+router.post("/addpatpastappt", addPatPastAppt);
 
 ///////////////////////////////////////////////////////////////////
 //Admin

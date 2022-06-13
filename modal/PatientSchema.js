@@ -50,12 +50,9 @@ const PatientSchema = new mongoose.Schema({
         date: {
             type: String,
         },
-        name: {
-            type: String,
-        }
     }],
     pastAppt:[{
-        id: {
+        _id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Doctor",
             unique: true
@@ -66,9 +63,6 @@ const PatientSchema = new mongoose.Schema({
         date: {
             type: String,
         },
-        name: {
-            type: String,
-        }
     }]
 })
 

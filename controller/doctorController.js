@@ -16,7 +16,6 @@ export const regDoctor = async(req,res) => {
         if(exist) {
             return res.status(400).json({message:"Email already exists!"});
         }
-        
         const docData = await new Doctor({name,age,designation,email,password,speciality,address,gender,picture,experience,dob,mobile,qualification});
         await docData.save();
         return res.status(200).json({message:"Doctor Registered Successfully!"});

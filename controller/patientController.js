@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 export const regPatient = async(req,res) => {
     try {
         const {name, email, password, designation,mobile, gender, dob, address, age} = req.body;
-        // console.log(req.body);
+     
         if(!name||!email||!password||!mobile||!designation||!gender||!dob||!address||!age){
             return res.status(400).json({message:"Fill the fields properly"});
         }
@@ -62,7 +62,7 @@ export const getAllPatient = async (req , res) => {
 export const getPatient = async (req , res) => {
     try {
         const id = req.params.id;
-        const data = await Patient.find({_id: id}).populate("upcomingAppt._id");
+        const data = await Patient.find({_id: id}).populate("upcomingAppt._id").populate("pastAppt._id");
         return res.status(200).json(data);
     } catch (error) {
         res.status(500).json({message : "Server error"});
@@ -115,16 +115,31 @@ export const searchDoctor = async(req,res) => {
 
 export const addPatUpcomingAppt = async(req,res) => {
     try {
-        console.log(req.body);
+        
         const pid = req.body.pid;
         const did = req.body.did;
         const time = req.body.time;
         const date = req.body.date;
-
+        
         const data = await Patient.findByIdAndUpdate({_id : pid} , {$addToSet: {upcomingAppt: {_id: did , time: time , date: date}}} , {new: true}).populate("upcomingAppt._id");
         res.status(200).json({message:"added successfully",data});
         
     } catch (error) {
         return res.status(500).json({message:"Server error!"});
+    }
+}
+
+export const addPatPastAppt = async (req , res) => {
+    try {
+        const pid = req.body.pid;
+        const did = req.body.did;
+        const time = req.body.time;
+        const date = req.body.date;
+        // console.log(req.body);
+        const data = await Patient.findByIdAndUpdate({_id : pid} , {$pull: {upcomingAppt: {_id: did , time: time , date: date}} , $addToSet: {pastAppt: {_id: did , time: time , date: date}} , } , {new: true}).populate("upcomingAppt._id").populate("pastAppt._id");
+        // console.log(data , "after");
+        res.status(200).json({message:"added successfully",data});
+    } catch (error) {
+        return res.status(500).json({ message: "Server error!" });
     }
 }
