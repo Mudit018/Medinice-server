@@ -61,6 +61,27 @@ io.on("connection",(socket)=>{
     socket.in(id).emit("reqdelete" , {});
   })
   
+  // socket.on("callUser" , ({pid , signalData ,did}) => {
+  //   // console.log(`${name} is calling`,userToCall);
+  //   socket.in(pid).emit("userCall" , {pid , signalData , did});
+  // })
+
+  // socket.on("joinPatient" , ({data, did}) => {
+  //   // console.log(data);
+  //   socket.in(did).emit("patientJoin" , {data});
+  // })
+
+  socket.emit("me", socket.id);
+
+  socket.on("callUser", ({ userToCall, signalData, from, name }) => {
+    console.log("server")
+		io.to(userToCall).emit("callUser", { signal: signalData, from, name });
+	});
+
+	socket.on("answerCall", (data) => {
+		io.to(data.to).emit("callAccepted", data.signal)
+	});
+
   socket.on("disconnect",() => {
     console.log("Disconnected");
     socket.broadcast.emit("callEnded");
