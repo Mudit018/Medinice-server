@@ -81,7 +81,11 @@ io.on("connection",(socket)=>{
 	socket.on("answerCall", (data) => {
 		io.to(data.to).emit("callAccepted", data.signal)
 	});
-
+	
+  socket.on("cameraOff",({isOff,data})=>{
+    io.to(data).emit("cameraOff",{isOff,data});
+  })
+  
   socket.on("disconnect",() => {
     console.log("Disconnected");
     socket.broadcast.emit("callEnded");
